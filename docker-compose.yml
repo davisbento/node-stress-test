@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: db_name
+      POSTGRES_DB: stress_test
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
@@ -14,5 +14,13 @@ services:
     build: .
     depends_on:
       - db
+    links:
+      - db
     ports:
       - '8080:8080'
+    volumes:
+      - .:/app
+      - nodemodules:/app/node_modules
+
+volumes:
+  nodemodules: {}
