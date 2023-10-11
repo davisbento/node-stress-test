@@ -1,0 +1,19 @@
+{
+  "name": "stress-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --watch index.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "engines": {
+    "node": "20"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "knex": "^3.0.1"
+  }
+}
