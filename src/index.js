@@ -37,6 +37,47 @@ const server = createServer(async (req, res) => {
 				return;
 			});
 	}
+
+	if (req.url === '/api/users' && req.method === 'GET') {
+		try {
+			const users = await pg('users').select('*');
+			res.writeHead(200, headers);
+			res.end(JSON.stringify({ users }));
+			return;
+		} catch (err) {
+			console.error(err);
+			res.writeHead(500, headers);
+			res.end(JSON.stringify({ error: 'Error' }));
+			return;
+		}
+	}
+
+	if (req.url === '/api/users' && req.method === 'POST') {
+		try {
+			const body = await new Promise((resolve, reject) => {
+				let body = '';
+				req.on('data', (chunk) => (body += chunk.toString()));
+				req.on('end', () => resolve(body));
+				req.on('error', (err) => reject(err));
+			});
+			const user = JSON.parse(body);
+			// make as base64
+			const hashedPassword = Buffer.from(user.password).toString('base64');
+			const userToAdd = {
+				...user,
+				password: hashedPassword
+			};
+			const [id] = await pg('users').insert(userToAdd).returning('id');
+			res.writeHead(200, headers);
+			res.end(JSON.stringify({ id }));
+			return;
+		} catch (err) {
+			console.error(err);
+			res.writeHead(500, headers);
+			res.end(JSON.stringify({ error: 'Error' }));
+			return;
+		}
+	}
 });
 
 server.listen(PORT).on('listening', () => console.log(`Server is listening on port ${PORT}`));
