@@ -6,3 +6,9 @@ migrate-user:
 
 migrate-run:
 	npx knex migrate:latest
+
+migrate-down:
+	npx knex migrate:rollback
+
+test:
+	docker-compose run k6 run /scripts/load-test.js
